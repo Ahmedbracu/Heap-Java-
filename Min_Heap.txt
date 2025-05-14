@@ -1,3 +1,12 @@
+Index:      1     2     3     4     5     6     7
+Value:     50    30    40    10    20    35    25
+
+            50
+          /    \
+        30      40
+       /  \    /  \
+     10   20  35  25
+
 public class Min_Heap {
 
     // Moves the element at index `i` down the heap until the heap property is restored.
