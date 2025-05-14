@@ -2,6 +2,7 @@
 # Heap Implementation in Java (1-Based Indexing)
 
 Index:      1     2     3     4     5     6     7
+
 Value:     50    30    40    10    20    35    25
 
 This project contains Java implementations of both **Max Heap** and **Min Heap** using **1-based indexing** with array representation. The heap is a complete binary tree that allows efficient insertion, deletion, and access to the maximum or minimum element.
