@@ -1,12 +1,11 @@
-Index:      1     2     3     4     5     6     7
-Value:     50    30    40    10    20    35    25
+Index:      1     2     3     4     5
+Value:     30    25     5    15    20
 
-            50
+            30
           /    \
-        30      40
-       /  \    /  \
-     10   20  35  25
-
+        25      5
+       /  \
+     15   20
 
 public class Max_Heap {
     /**
@@ -155,6 +154,15 @@ public class Max_Heap {
         Sink(arr, 1, n - 1);  // Restore heap property
         return max;
     }
+
+Index:      1     2     3     4
+Value:     25    20    5    15
+
+            25
+          /    \
+        20      5
+       /  
+     15
 
 
     /**
