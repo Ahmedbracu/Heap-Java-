@@ -1,16 +1,15 @@
-Index:      1     2     3     4     5     6     7
-Value:     50    30    40    10    20    35    25
+Index:      1     2     3     4     5
+Value:      5    25    15    30    20
 
-            50
-          /    \
-        30      40
-       /  \    /  \
-     10   20  35  25
+            5
+          /   \
+        25     15
+       /  \
+     30   20
 
 public class Min_Heap {
-
     // Moves the element at index `i` down the heap until the heap property is restored.
-    public static void Sink(int[] arr, int i, int n) {
+    public static void Sink(Integer[] arr, int i, int n) {
         int smallest = i;
         int left = 2 * i;
         int right = 2 * i + 1;
@@ -35,7 +34,7 @@ public class Min_Heap {
     }
 
     // Moves the element at index `i` up the heap until the heap property is restored.
-    public static void Swim(int[] arr, int i) {
+    public static void Swim(Integer[] arr, int i) {
         while (i > 1 && arr[i / 2] > arr[i]) {
             int temp = arr[i];
             arr[i] = arr[i / 2];
@@ -45,14 +44,14 @@ public class Min_Heap {
     }
 
     // Converts an unordered array into a valid min heap.
-    public void Build_Min_Heap(int[] arr, int n) {
+    public void Build_Min_Heap(Integer[] arr, int n) {
         for (int i = n / 2; i >= 1; i--) {
             Sink(arr, i, n);
         }
     }
 
     // Performs heap sort (ascending order).
-    public void Heap_Sort(int[] arr) {
+    public void Heap_Sort(Integer[] arr) {
         int n = arr.length - 1;
         Build_Min_Heap(arr, n);
         for (int i = n; i >= 2; i--) {
@@ -64,7 +63,7 @@ public class Min_Heap {
     }
 
     // Inserts a new key into the heap.
-    public int insert(int[] arr, int n, int key) {
+    public int insert(Integer[] arr, int n, int key) {
         if (n + 1 >= arr.length) {
             System.out.println("Heap is full");
             return n;
@@ -76,7 +75,7 @@ public class Min_Heap {
     }
 
     // Deletes the minimum element (root) from the heap.
-    public int delete(int[] arr, int n) {
+    public int delete(Integer[] arr, int n) {
         if (n < 1) {
             System.out.println("Heap is empty");
             return n;
@@ -88,7 +87,7 @@ public class Min_Heap {
     }
 
     // Returns the minimum value (at the root) without removing it.
-    public int peek(int[] arr) {
+    public int peek(Integer[] arr) {
         int n = arr.length - 1;
         if (n < 1) {
             throw new RuntimeException("Heap is empty");
@@ -96,49 +95,56 @@ public class Min_Heap {
         return arr[1];
     }
 
-    // Increases the value of an element (may move it down)
-    public void increase_key_Min_Heap(int[] arr, int i, int new_value) {
-        if (new_value < arr[i]) {
-            System.out.println("New value is smaller than current value");
-            return;
-        }
-        arr[i] = new_value;
-        Sink(arr, i, arr.length - 1);
+    // Returns the number of non-null elements in the heap (1-based indexing)
+    public static Integer getHeapSize(Integer[] arr) {
+        int count = 0;
+        for(int i = 1; i < arr.length; i++) { // Skip index 0
+            if(arr[i] != null) {
+                count++; // Count valid elements
+            } else {
+                break; // Stop at the first null
+            }
+        } 
+        return count;
     }
 
-    // Decreases the value of an element (may move it up)
-    public void decrease_key_Min_Heap(int[] arr, int i, int new_value) {
-        if (new_value > arr[i]) {
-            System.out.println("New value is larger than current value");
-            return;
-        }
-        arr[i] = new_value;
-        Swim(arr, i);
+    // Returns the minimum value (root) of the min-heap
+    public static Integer getMinValue(Integer[] arr) {
+        if(arr.length > 1 && arr[1] != null) {
+            return arr[1]; // Root value
+        } else {
+            return null; // Heap is empty
+        }   
     }
 
-    // Checks whether the heap is empty (n = 0).
-    public boolean isEmpty(int n) {
-        return n == 0;
-    }
-
-    // Removes and returns the minimum element (root).
-    public int extract_min(int[] arr, int n) {
-        if (isEmpty(n)) {
-            System.out.println("Heap is empty");
-            return -1;
+    // Removes and returns the minimum element (root)
+    public int extract_min(Integer[] arr) {
+        int n = getHeapSize(arr); // Get heap size
+        if (n < 1) {
+            System.out.println("\"Heap underflow\"");
+            return Integer.MAX_VALUE; // Indicate underflow
         }
-        int min = arr[1];
-        arr[1] = arr[n];
-        n--;
-        Sink(arr, 1, n);
-        return min;
+        int min = getMinValue(arr); // Save current root
+        arr[1] = arr[n]; // Move last element to root
+        arr[n] = null;   // Clear last element
+        Sink(arr, 1, n - 1); // Restore heap property
+        return min; // Return removed root
     }
+Index:      1     2     3     4
+Value:     15    25    20   30                 [[ After Extracting minimum ]]
+
+            15
+          /    \
+        25      20
+       / 
+     30
+
 
     // Returns the maximum element in the heap without removing it (scans all elements).
-    public int extract_max(int[] arr, int n) {
-        if (isEmpty(n)) {
-            System.out.println("Heap is empty");
-            return -1;
+    public int extract_max(Integer[] arr) {
+        int n = arr.length - 1;
+        if (n < 1) {
+        throw new RuntimeException("Heap underflow");
         }
         int max = arr[1];
         for (int i = 2; i <= n; i++) {
@@ -148,20 +154,50 @@ public class Min_Heap {
         }
         return max;
     }
+
+    // Increases the value of an element (may move it down)
+    public void increase_key_Min_Heap(Integer[] arr, int i, int new_value) {
+        if (new_value < arr[i]) {
+            System.out.println("New value is smaller than current value");
+            return;
+        }
+        arr[i] = new_value;
+        Sink(arr, i, arr.length - 1);
+    }
+
+    // Decreases the value of an element (may move it up)
+    public void decrease_key_Min_Heap(Integer[] arr, int i, int new_value) {
+        if (new_value > arr[i]) {
+            System.out.println("New value is larger than current value");
+            return;
+        }
+        arr[i] = new_value;
+        Swim(arr, i);
+    }
 }      
 
 
 public class Min_Heap_Main {
     public static void main(String[] args) {
-        int[] heap = new int[100];  // 1-based indexing
+        Integer[] heap = new Integer[100];  // 1-based indexing
         int n = 0;
         Min_Heap minHeap = new Min_Heap();
 
         n = minHeap.insert(heap, n, 20);
         n = minHeap.insert(heap, n, 15);
+        n = minHeap.insert(heap, n, 5);
+        n = minHeap.insert(heap, n, 25);
         n = minHeap.insert(heap, n, 30);
+        for (int i = 1; i <= n; i++) {
+            System.out.print(heap[i] + " ");
+        }
+        System.out.print("\n");
         System.out.println("Min: " + minHeap.peek(heap));
-        n = minHeap.delete(heap, n);
+        int z = minHeap.extract_min(heap);
+        System.out.println(z);
         System.out.println("After delete, new Min: " + minHeap.peek(heap));
+        for (int i = 1; i <= n; i++) {
+            System.out.print(heap[i] + " ");
+        }
     }
 }
