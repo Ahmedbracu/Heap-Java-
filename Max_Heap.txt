@@ -142,25 +142,17 @@ public class Max_Heap {
         Sink(arr, i, arr.length - 1);
     }
 
-    /**
-     * Checks whether the heap is empty (n = 0).
-     */
-    public boolean isEmpty(int n) {
-        return n == 0;
-    }
-
-    /**
+     /**
      * Removes and returns the maximum element (root) from the heap.
      */
-    public int extract_max(int[] arr, int n) {
+    public int extract_max(int[] arr) {
         int n = arr.length - 1; // Adjust
-        if (isEmpty(n)) {
-            System.out.println("Heap is empty");
-            return -1;
+        if (n < 1) {
+        throw new RuntimeException("Heap underflow");
         }
         int max = arr[1];
         arr[1] = arr[n];
-        n = n - 1 ; // Adjust for 1-based indexing
+        n--; // Adjust for 1-based indexing
         Sink(arr, 1 , n);
         return max;
     }
@@ -169,10 +161,10 @@ public class Max_Heap {
      * Returns the minimum element from the heap without removing it.
      * Note: This is not efficient for max heap. It scans all elements.
      */
-    public int extract_min(int[] arr, int n) {
-        if (isEmpty(n)) {
-            System.out.println("Heap is empty");
-            return -1;
+    public int extract_min(int[] arr) {
+        int n = arr.length - 1;
+        if (n < 1) {
+        throw new RuntimeException("Heap underflow");
         }
         int min = arr[1];
         for (int i = 2; i <= n; i++) {
@@ -192,9 +184,18 @@ public class Max_Heap {
 
         n = maxHeap.insert(heap, n, 20);
         n = maxHeap.insert(heap, n, 15);
+        n = maxHeap.insert(heap, n, 5);
+        n = maxHeap.insert(heap, n, 25);
         n = maxHeap.insert(heap, n, 30);
-        System.out.println("Max: " + maxHeap.peek(heap));
-        n = maxHeap.delete(heap, n);  // Fix: assign back n after delete
+        for (int i = 1; i <= n; i++) {
+            System.out.print(heap[i] + " ");
+        }
+        System.out.print("\n");
+        int z = maxHeap.extract_max(heap);
+        System.out.println("Max: " +z);
         System.out.println("After delete, new Max: " + maxHeap.peek(heap));
+        for (int i = 1; i <= n; i++) {
+            System.out.print(heap[i] + " ");
+        }
     }
 }
