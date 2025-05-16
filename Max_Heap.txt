@@ -153,13 +153,15 @@ public class Max_Heap {
      * Removes and returns the maximum element (root) from the heap.
      */
     public int extract_max(int[] arr, int n) {
+        int n = arr.length - 1; // Adjust
         if (isEmpty(n)) {
             System.out.println("Heap is empty");
             return -1;
         }
         int max = arr[1];
         arr[1] = arr[n];
-        Sink(arr, 1, n - 1);
+        n = n - 1 ; // Adjust for 1-based indexing
+        Sink(arr, 1 , n);
         return max;
     }
 
