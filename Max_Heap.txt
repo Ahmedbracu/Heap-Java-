@@ -13,7 +13,7 @@ public class Max_Heap {
      * Moves the element at index `i` down the heap until the heap property is restored.
      * Used in building and adjusting the heap.
      */
-    public static void Sink(int[] arr, int i, int n) {
+    public static void Sink(Integer[] arr, int i, int n) {
         int largest = i;
         int left = 2 * i;
         int right = 2 * i + 1;
@@ -41,7 +41,7 @@ public class Max_Heap {
      * Moves the element at index `i` up the heap until the heap property is restored.
      * Used during insertion or key increase.
      */
-    public static void Swim(int[] arr, int i) {
+    public static void Swim(Integer[] arr, int i) {
         while (i > 1 && arr[i / 2] < arr[i]) {
             int temp = arr[i];
             arr[i] = arr[i / 2];
@@ -54,7 +54,8 @@ public class Max_Heap {
      * Converts an unordered array into a valid max heap.
      * Only elements from index 1 to n are considered (1-based indexing).
      */
-    public void Build_Max_Heap(int[] arr, int n) {
+    public void Build_Max_Heap(Integer[] arr) {
+        int n = arr.length - 1; // Adjust for 1-based indexing
         for (int i = n / 2; i >= 1; i--) {
             Sink(arr, i, n);
         }
@@ -64,9 +65,9 @@ public class Max_Heap {
      * Performs heap sort on the array.
      * Assumes the heap starts from index 1 and ends at arr.length - 1.
      */
-    public void Heap_Sort(int[] arr) {
+    public void Heap_Sort(Integer[] arr) {
         int n = arr.length - 1;
-        Build_Max_Heap(arr, n);
+        Build_Max_Heap(arr);
         for (int i = n; i >= 2; i--) {
             int temp = arr[1];
             arr[1] = arr[i];
@@ -80,7 +81,7 @@ public class Max_Heap {
      * @param n - current size of the heap
      * @return updated size of the heap after insertion
      */
-    public int insert(int[] arr, int n, int key) {
+    public int insert(Integer[] arr, int n, int key) {
         if (n + 1 >= arr.length) {
             System.out.println("Heap is full");
             return n;
@@ -96,7 +97,7 @@ public class Max_Heap {
      * @param n - current size of the heap
      * @return updated size of the heap after deletion
      */
-    public int delete(int[] arr, int n) {
+    public int delete(Integer[] arr, int n) {
         if (n < 1) {
             System.out.println("Heap is empty");
             return n;
@@ -110,7 +111,7 @@ public class Max_Heap {
     /**
      * Returns the maximum value (at the root) without removing it.
      */
-    public int peek(int[] arr) {
+    public int peek(Integer[] arr) {
         int n = arr.length - 1;
         if (n < 1) {
             throw new RuntimeException("Heap is empty");
@@ -118,50 +119,49 @@ public class Max_Heap {
         return arr[1];
     }
 
-    /**
-     * Increases the value of an element at index `i` and restores heap order.
-     */
-    public void increase_key_Max_Heap(int[] arr, int i, int new_value) {
-        if (new_value < arr[i]) {
-            System.out.println("New value is smaller than current value");
-            return;
+    // Returns the number of non-null elements in the heap (1-based index)
+    public static Integer getHeapSize(Integer[] arr) {
+        int count = 0;
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i] != null) count++;
+            else break;
         }
-        arr[i] = new_value;
-        Swim(arr, i);
+        return count;
+    }
+
+    // Returns the max value (root) of the heap
+    public static Integer getMaxValue(Integer[] arr) {
+        if (arr.length > 1 && arr[1] != null) {
+            return arr[1]; // Return root value
+        } 
+        else {
+            return null; // Heap is empty
+        }
     }
 
     /**
-     * Decreases the value of an element at index `i` and restores heap order.
+     * Removes and returns the root of the heap (max element),
+     * then restores heap property by sinking the new root.
      */
-    public void decrease_key_Max_Heap(int[] arr, int i, int new_value) {
-        if (new_value > arr[i]) {
-            System.out.println("New value is larger than current value");
-            return;
-        }
-        arr[i] = new_value;
-        Sink(arr, i, arr.length - 1);
-    }
-
-     /**
-     * Removes and returns the maximum element (root) from the heap.
-     */
-    public int extract_max(int[] arr) {
-        int n = arr.length - 1; // Adjust
+    public int extract_max(Integer[] arr) {
+        int n = getHeapSize(arr);
         if (n < 1) {
-        throw new RuntimeException("Heap underflow");
+            System.out.println("\"Heap underflow\"");
+            return Integer.MIN_VALUE;
         }
-        int max = arr[1];
-        arr[1] = arr[n];
-        n--; // Adjust for 1-based indexing
-        Sink(arr, 1 , n);
+        int max = getMaxValue(arr);
+        arr[1] = arr[n];  // Move last element to root
+        arr[n] = null;    // Clear last element
+        Sink(arr, 1, n - 1);  // Restore heap property
         return max;
     }
+
 
     /**
      * Returns the minimum element from the heap without removing it.
      * Note: This is not efficient for max heap. It scans all elements.
      */
-    public int extract_min(int[] arr) {
+    public int extract_min(Integer[] arr) {
         int n = arr.length - 1;
         if (n < 1) {
         throw new RuntimeException("Heap underflow");
@@ -174,11 +174,36 @@ public class Max_Heap {
         }
         return min;
     }
+
+    /**
+     * Increases the value of an element at index `i` and restores heap order.
+     */
+    public void increase_key_Max_Heap(Integer[] arr, int i, int new_value) {
+        if (new_value < arr[i]) {
+            System.out.println("New value is smaller than current value");
+            return;
+        }
+        arr[i] = new_value;
+        Swim(arr, i);
+    }
+
+    /**
+     * Decreases the value of an element at index `i` and restores heap order.
+     */
+    public void decrease_key_Max_Heap(Integer[] arr, int i, int new_value) {
+        if (new_value > arr[i]) {
+            System.out.println("New value is larger than current value");
+            return;
+        }
+        arr[i] = new_value;
+        Sink(arr, i, arr.length - 1);
+    }
 }  
 
-                                                                                                                                      public class Max_Heap_Main {
+                                                                                                                                      
+public class Max_Heap_Main {
     public static void main(String[] args) {
-        int[] heap = new int[100];  // 1-based indexing
+        Integer[] heap = new Integer[100];  // 1-based indexing
         int n = 0;
         Max_Heap maxHeap = new Max_Heap();
 
